@@ -6,9 +6,9 @@ const cloudinary = require('../lib/cloudinary');
 const prisma = new PrismaClient();
 
 const getAllLuxuryCar = asyncHandler(async (req, res) => {
-  const { carBrand } = req.query;
+  const { brand } = req.query;
   const filter = {};
-  if (carBrand) filter.brand = carBrand;
+  if (brand) filter.brand = brand;
 
   const luxuryCar = await prisma.luxuryCar.findMany({
     where: filter,
@@ -17,10 +17,10 @@ const getAllLuxuryCar = asyncHandler(async (req, res) => {
   if (!luxuryCar || luxuryCar.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
-      .json({ message: 'No electricCars found' });
+      .json({ message: 'No luxury cars found' });
   }
 
-  res.status(StatusCodes.OK).json(electricCars);
+  res.status(StatusCodes.OK).json(luxuryCar);
 });
 
 const GetLuxuryCarById = asyncHandler(async (req, res) => {
@@ -38,9 +38,9 @@ const GetLuxuryCarById = asyncHandler(async (req, res) => {
 const CreateLuxuryCar = asyncHandler(async (req, res) => {
   const { brand, name, model, image, price } = req.body;
   if (!brand || !name || !model || !image || !price) {
-    res
+    return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: 'brand,name,model,image and price is requred' });
+      .json({ message: 'brand,name,model,image and price is required' });
   }
   const uploadResponse = await cloudinary.uploader.upload(image);
 
