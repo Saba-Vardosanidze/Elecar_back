@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const { StatusCodes } = require('http-status-codes');
 const { PrismaClient } = require('@prisma/client');
-
+const cloudinary = require('../lib/cloudinary');
 const prisma = new PrismaClient();
 
 const GetAllElectricCar = asyncHandler(async (req, res) => {
@@ -39,4 +39,43 @@ const GetElectricCarById = asyncHandler(async (req, res) => {
   res.status(200).json(electricCar);
 });
 
-module.exports = { GetAllElectricCar, GetElectricCarById };
+const CreateElectricCarById = asyncHandler(async (req, res) => {
+  const { name, model, topSpeed, engineType, zeroToHundred, price, image } =
+    req.body;
+
+  if (
+    !name ||
+    !model ||
+    !topSpeed ||
+    !engineType ||
+    !zeroToHundred ||
+    !price ||
+    !image
+  ) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message:
+        'model,name,topSpeed,engineType,zeroToHundred,price and image is required',
+    });
+  }
+  const uploadResponse = await cloudinary.uploader.upload(image);
+
+  const newElectricCar = await prisma.electricCar.create({
+    data: {
+      name,
+      model,
+      topSpeed,
+      engineType,
+      zeroToHundred,
+      price,
+      image: uploadResponse.secure_url,
+    },
+  });
+
+  res.status(StatusCodes.CREATED).json(newElectricCar);
+});
+
+module.exports = {
+  GetAllElectricCar,
+  GetElectricCarById,
+  CreateElectricCarById,
+};
