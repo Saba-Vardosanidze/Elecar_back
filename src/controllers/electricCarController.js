@@ -40,7 +40,7 @@ const GetElectricCarById = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(electricCar);
 });
 
-const CreateElectricCarById = asyncHandler(async (req, res) => {
+const CreateElectricCar = asyncHandler(async (req, res) => {
   const { name, model, topSpeed, engineType, zeroToHundred, price, image } =
     req.body;
 
@@ -78,8 +78,8 @@ const CreateElectricCarById = asyncHandler(async (req, res) => {
 const DeleteElectricCar = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const deletedCar = prisma.electricCar.delete({
-    where: { id: id },
+  const deletedCar = await prisma.electricCar.delete({
+    where: { id: Number(id) },
   });
 
   res.status(200).json({
@@ -88,9 +88,39 @@ const DeleteElectricCar = asyncHandler(async (req, res) => {
   });
 });
 
+const UpdateElectricCar = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, model, topSpeed, engineType, zeroToHundred, price, image } =
+    req.body;
+
+  let updatedData = {
+    name,
+    model,
+    topSpeed,
+    engineType,
+    zeroToHundred,
+    price,
+  };
+
+  if (image) {
+    const uploadResponse = await cloudinary.uploader.upload(image);
+    updatedData.image = uploadResponse.secure_url;
+  }
+
+  const updatedCar = await prisma.electricCar.update({
+    where: { id: Number(id) },
+    data: updatedData,
+  });
+  res.status(StatusCodes.OK).json({
+    message: 'Electric car updated successfully',
+    updatedCar,
+  });
+});
+
 module.exports = {
   GetAllElectricCar,
+  UpdateElectricCar,
   GetElectricCarById,
-  CreateElectricCarById,
+  CreateElectricCar,
   DeleteElectricCar,
 };
