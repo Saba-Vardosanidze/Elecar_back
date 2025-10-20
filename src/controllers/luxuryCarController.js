@@ -69,9 +69,36 @@ const DeleteLuxuryCar = asyncHandler(async (req, res) => {
   });
 });
 
+const UpdateLuxuryCar = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { brand, name, model, image, price } = req.body;
+
+  let updatedData = {
+    brand,
+    name,
+    model,
+    image,
+    price,
+  };
+
+  if (image) {
+    const uploadResponse = await cloudinary.uploader.upload(image);
+    updatedData.image = uploadResponse.secure_url;
+  }
+  const updatedCar = await prisma.luxuryCar.update({
+    where: { id: Number(id) },
+    data: updatedData,
+  });
+  res.status(StatusCodes.OK).json({
+    message: 'Electric car updated successfully',
+    updatedCar,
+  });
+});
+
 module.exports = {
   getAllLuxuryCar,
   GetLuxuryCarById,
   CreateLuxuryCar,
   DeleteLuxuryCar,
+  UpdateLuxuryCar,
 };
