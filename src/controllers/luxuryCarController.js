@@ -35,7 +35,7 @@ const GetLuxuryCarById = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(luxuryCar);
 });
 
-const CreateLuxuryCarByID = asyncHandler(async (req, res) => {
+const CreateLuxuryCar = asyncHandler(async (req, res) => {
   const { brand, name, model, image, price } = req.body;
   if (!brand || !name || !model || !image || !price) {
     res
@@ -44,7 +44,7 @@ const CreateLuxuryCarByID = asyncHandler(async (req, res) => {
   }
   const uploadResponse = await cloudinary.uploader.upload(image);
 
-  const newLuxuryCar = await prisma.electricCar.create({
+  const newLuxuryCar = await prisma.luxuryCar.create({
     data: {
       brand,
       name,
@@ -56,4 +56,4 @@ const CreateLuxuryCarByID = asyncHandler(async (req, res) => {
 
   res.status(StatusCodes.CREATED).json(newLuxuryCar);
 });
-module.exports = { getAllLuxuryCar, GetLuxuryCarById, CreateLuxuryCarByID };
+module.exports = { getAllLuxuryCar, GetLuxuryCarById, CreateLuxuryCar };
