@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 const { StatusCodes } = require('http-status-codes');
 const { PrismaClient } = require('@prisma/client');
 const cloudinary = require('../lib/cloudinary');
+
 const prisma = new PrismaClient();
 
 const GetAllElectricCar = asyncHandler(async (req, res) => {
@@ -34,9 +35,9 @@ const GetElectricCarById = asyncHandler(async (req, res) => {
     where: { id: Number(id) },
   });
   if (!electricCar) {
-    return res.status(404).json({ message: 'Car not Found' });
+    return res.status(StatusCodes.NOT_FOUND).json({ message: 'Car not Found' });
   }
-  res.status(200).json(electricCar);
+  res.status(StatusCodes.OK).json(electricCar);
 });
 
 const CreateElectricCarById = asyncHandler(async (req, res) => {
