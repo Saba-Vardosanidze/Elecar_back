@@ -75,8 +75,22 @@ const CreateElectricCarById = asyncHandler(async (req, res) => {
   res.status(StatusCodes.CREATED).json(newElectricCar);
 });
 
+const DeleteElectricCar = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedCar = prisma.electricCar.delete({
+    where: { id: id },
+  });
+
+  res.status(200).json({
+    message: 'Car deleted successfully',
+    deletedCar,
+  });
+});
+
 module.exports = {
   GetAllElectricCar,
   GetElectricCarById,
   CreateElectricCarById,
+  DeleteElectricCar,
 };

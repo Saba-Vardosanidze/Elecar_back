@@ -56,4 +56,22 @@ const CreateLuxuryCar = asyncHandler(async (req, res) => {
 
   res.status(StatusCodes.CREATED).json(newLuxuryCar);
 });
-module.exports = { getAllLuxuryCar, GetLuxuryCarById, CreateLuxuryCar };
+const DeleteLuxuryCar = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedCar = await prisma.luxuryCar.delete({
+    where: { id: Number(id) },
+  });
+
+  res.status(200).json({
+    message: 'Car deleted successfully',
+    deletedCar,
+  });
+});
+
+module.exports = {
+  getAllLuxuryCar,
+  GetLuxuryCarById,
+  CreateLuxuryCar,
+  DeleteLuxuryCar,
+};
