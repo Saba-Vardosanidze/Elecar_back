@@ -36,3 +36,12 @@ model LuxuryCar {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt       @map("updated_at")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
+  password  String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt       @map("updated_at")
+}

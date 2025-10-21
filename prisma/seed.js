@@ -9,5 +9,8 @@ async function seed() {
   await prisma.luxuryCar.createMany({
     data: [],
   });
+  await prisma.user.createMany({
+    data: [],
+  });
 }
 seed().then(() => prisma.$disconnect());
