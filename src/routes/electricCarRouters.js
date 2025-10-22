@@ -6,6 +6,7 @@ const {
   CreateElectricCar,
   DeleteElectricCar,
 } = require('../controllers/electricCarController');
+const protect = require('../middlewares/authMiddleware');
 
 const electircCarRouters = express.Router();
 
@@ -64,6 +65,8 @@ electircCarRouters.get('/:id', GetElectricCarById);
  *   post:
  *     tags: [ElectricCar]
  *     summary: Create a new electric car
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -96,8 +99,10 @@ electircCarRouters.get('/:id', GetElectricCarById);
  *     responses:
  *       201:
  *         description: Electric car created
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-electircCarRouters.post('/createElectricCar', CreateElectricCar);
+electircCarRouters.post('/createElectricCar', protect, CreateElectricCar);
 
 /**
  * @swagger
@@ -105,6 +110,8 @@ electircCarRouters.post('/createElectricCar', CreateElectricCar);
  *   delete:
  *     tags: [ElectricCar]
  *     summary: Delete an electric car
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -115,8 +122,10 @@ electircCarRouters.post('/createElectricCar', CreateElectricCar);
  *     responses:
  *       200:
  *         description: Car deleted successfully
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-electircCarRouters.delete('/:id', DeleteElectricCar);
+electircCarRouters.delete('/:id', protect, DeleteElectricCar);
 
 /**
  * @swagger
@@ -124,6 +133,8 @@ electircCarRouters.delete('/:id', DeleteElectricCar);
  *   patch:
  *     tags: [ElectricCar]
  *     summary: Update an electric car
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -154,7 +165,9 @@ electircCarRouters.delete('/:id', DeleteElectricCar);
  *     responses:
  *       200:
  *         description: Electric car updated
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-electircCarRouters.patch('/:id', UpdateElectricCar);
+electircCarRouters.patch('/:id', protect, UpdateElectricCar);
 
 module.exports = electircCarRouters;

@@ -6,6 +6,7 @@ const {
   DeleteLuxuryCar,
   UpdateLuxuryCar,
 } = require('../controllers/luxuryCarController');
+const protect = require('../middlewares/authMiddleware');
 
 const luxuryCar = express.Router();
 
@@ -92,8 +93,10 @@ luxuryCar.get('/:id', GetLuxuryCarById);
  *         description: Luxury car created successfully
  *       400:
  *         description: Missing required fields
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-luxuryCar.post('/createLuxuryCar', CreateLuxuryCar);
+luxuryCar.post('/createLuxuryCar', protect, CreateLuxuryCar);
 
 /**
  * @swagger
@@ -101,6 +104,8 @@ luxuryCar.post('/createLuxuryCar', CreateLuxuryCar);
  *   delete:
  *     tags: [LuxuryCar]
  *     summary: Delete a luxury car by ID
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -113,8 +118,10 @@ luxuryCar.post('/createLuxuryCar', CreateLuxuryCar);
  *         description: Car deleted successfully
  *       404:
  *         description: Car not found
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-luxuryCar.delete('/:id', DeleteLuxuryCar);
+luxuryCar.delete('/:id', protect, DeleteLuxuryCar);
 
 /**
  * @swagger
@@ -122,6 +129,8 @@ luxuryCar.delete('/:id', DeleteLuxuryCar);
  *   patch:
  *     tags: [LuxuryCar]
  *     summary: Update a luxury car by ID
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -152,7 +161,9 @@ luxuryCar.delete('/:id', DeleteLuxuryCar);
  *         description: Luxury car updated successfully
  *       404:
  *         description: Car not found
+ *       401:
+ *         description: Unauthorized - JWT required
  */
-luxuryCar.patch('/:id', UpdateLuxuryCar);
+luxuryCar.patch('/:id', protect, UpdateLuxuryCar);
 
 module.exports = luxuryCar;
